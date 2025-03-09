@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Formulario de Organización de Eventos</title>
+    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <script src="node_modules/bootstrap/dist/js/bootstrap.bundle.min.js" defer></script>
+    <style>
+        body {
+            background-color: #000000; /* Negro */
+            color: white;
+        }
+        .titulo {
+            font-family: 'Georgia', serif;
+            font-size: 2rem;
+            font-weight: bold;
+            text-align: center;
+            color: #b8860b; /* Dorado */
+            margin-top: 20px;
+        }
+        .subtitulo {
+            text-align: center;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+        .container {
+            background: black;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        .form-label {
+            color: white;
+        }
+        .form-control, .form-select {
+            background-color: black;
+            color: white;
+            border: 1px solid white;
+        }
+        .form-control::placeholder {
+            color: #aaaaaa;
+        }
+        .form-check-label {
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1 class="titulo">Organización de Eventos</h1>
+    <p class="subtitulo">Conteste este formulario con honestidad para que podamos validar su reservación.</p>
+
+    <form class="row g-3">
+        <div class="col-md-6">
+            <label for="inputLastName" class="form-label">Apellidos</label>
+            <input type="text" class="form-control" id="inputLastName">
+        </div>
+        <div class="col-md-6">
+            <label for="inputFirstName" class="form-label">Nombre(s)</label>
+            <input type="text" class="form-control" id="inputFirstName">
+        </div>
+        <div class="col-md-6">
+            <label for="inputEmail" class="form-label">Email</label>
+            <input type="email" class="form-control" id="inputEmail">
+        </div>
+        <div class="col-md-6">
+            <label for="inputPhone" class="form-label">Número de Teléfono</label>
+            <input type="tel" class="form-control" id="inputPhone">
+        </div>
+        <div class="col-md-6">
+            <label for="inputEventType" class="form-label">Tipo de Evento</label>
+            <input type="text" class="form-control" id="inputEventType" placeholder="Boda, fiesta, conferencia, etc.">
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">Tipo de plan que quiere para su evento (Los precios varían debido al servicio que se le brinda)</label>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="eventPlan" id="planClasico" value="Clasico">
+                <label class="form-check-label" for="planClasico">Clásico: $30,000</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="eventPlan" id="planPremium" value="Premium">
+                <label class="form-check-label" for="planPremium">Premium: $45,000</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="eventPlan" id="planGolden" value="Golden">
+                <label class="form-check-label" for="planGolden">Golden: $65,000</label>
+            </div>
+        </div>
+        <div class="col-12">
+            <label for="inputAdvancePayment" class="form-label">Cantidad de Anticipo</label>
+            <input type="number" class="form-control" id="inputAdvancePayment" placeholder="Cantidad en pesos mexicanos">
+        </div>
+        <div class="col-md-6">
+            <label for="inputAdditionalService" class="form-label">Servicio Adicional</label>
+            <input type="text" class="form-control" id="inputAdditionalService" placeholder="Mariachis, DJ, artista, etc.">
+        </div>
+        <div class="col-md-4">
+            <label for="inputRentalHours" class="form-label">Horas de Renta</label>
+            <select id="inputRentalHours" class="form-select">
+                <option selected>Elige...</option>
+                <option value="3">3 horas</option>
+                <option value="4">4 horas</option>
+                <option value="5">5 horas</option>
+                <option value="6">6 horas</option>
+                <option value="7">7 horas</option>
+            </select>
+        </div>
+        <div class="col-12">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="gridCheck">
+                <label class="form-check-label" for="gridCheck">
+                    Me comprometo a realizar el pago faltante después del anticipo
+                </label>
+            </div>
+        </div>
+        <div class="col-12">
+            <button type="submit" class="btn btn-primary">Enviar</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    document.querySelector("form").addEventListener("submit", async function(event) {
+        event.preventDefault();
+
+        const formData = {
+            apellidos: document.getElementById("inputLastName").value,
+            nombres: document.getElementById("inputFirstName").value,
+            email: document.getElementById("inputEmail").value,
+            telefono: document.getElementById("inputPhone").value,
+            tipo_evento: document.getElementById("inputEventType").value,
+            plan_evento: document.querySelector('input[name="eventPlan"]:checked')?.value,
+            cantidad_anticipo: document.getElementById("inputAdvancePayment").value,
+            servicio_adicional: document.getElementById("inputAdditionalService").value,
+            horas_renta: document.getElementById("inputRentalHours").value,
+            compromiso_pago: document.getElementById("gridCheck").checked
+        };
+
+        const response = await fetch("http://localhost:3000/guardar-reserva", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(formData)
+        });
+
+        const data = await response.json();
+        alert(data.mensaje);
+    });
+</script>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>#</th>
+        <th>Apellidos</th>
+        <th>Nombres</th>
+        <th>Email</th>
+        <th>Teléfono</th>
+        <th>Tipo de Evento</th>
+        <th>Plan de Evento</th>
+        <th>Cantidad de Anticipo</th>
+        <th>Servicio Adicional</th>
+        <th>Horas de Renta</th>
+        <th>Compromiso de Pago</th>
+        <th>Acciones</th>
+    </tr>
+    </thead>
+    <tbody id="reservasTableBody">
+    </tbody>
+</table>
+
+<script>
+
+    async function cargarReservas() {
+        const response = await fetch("http://localhost:3000/reservas");
+        const reservas = await response.json();
+        const tableBody = document.getElementById("reservasTableBody");
+        tableBody.innerHTML = '';
+
+        reservas.forEach((reserva, index) => {
+            const row = document.createElement("tr");
+
+            row.innerHTML = `
+                <td>${index + 1}</td>
+                <td>${reserva.apellidos}</td>
+                <td>${reserva.nombres}</td>
+                <td>${reserva.email}</td>
+                <td>${reserva.telefono}</td>
+                <td>${reserva.tipo_evento}</td>
+                <td>${reserva.plan_evento}</td>
+                <td>$${reserva.cantidad_anticipo}</td>
+                <td>${reserva.servicio_adicional}</td>
+                <td>${reserva.horas_renta}</td>
+                <td>${reserva.compromiso_pago ? "Sí" : "No"}</td>
+                <td>
+                    <button class="btn btn-warning" onclick="editarReserva(${reserva.id})">✏️</button>
+                    <button class="btn btn-danger" onclick="eliminarReserva(${reserva.id})">🗑️</button>
+                </td>
+            `;
+
+            tableBody.appendChild(row);
+        });
+    }
+
+
+    window.onload = cargarReservas;
+
+
+    async function eliminarReserva(id) {
+        const confirmDelete = confirm("¿Estás seguro de que deseas eliminar esta reserva?");
+        if (confirmDelete) {
+            const response = await fetch(`http://localhost:3000/eliminar-reserva/${id}`, { method: "DELETE" });
+            const data = await response.json();
+            alert(data.mensaje);
+            cargarReservas();
+        }
+    }
+
+
+    async function editarReserva(id) {
+        const response = await fetch(`http://localhost:3000/reserva/${id}`);
+        const reserva = await response.json();
+
+        // Rellenar el modal con los datos de la reserva
+        document.getElementById("editLastName").value = reserva.apellidos;
+        document.getElementById("editFirstName").value = reserva.nombres;
+        document.getElementById("editEmail").value = reserva.email;
+        document.getElementById("editPhone").value = reserva.telefono;
+        document.getElementById("editEventType").value = reserva.tipo_evento;
+        document.getElementById("editAdvancePayment").value = reserva.cantidad_anticipo;
+        document.getElementById("editAdditionalService").value = reserva.servicio_adicional || '';
+        document.getElementById("editRentalHours").value = reserva.horas_renta;
+        document.getElementById("editCommitment").checked = reserva.compromiso_pago;
+
+
+        if (reserva.plan_evento === "Clasico") {
+            document.getElementById("editPlanClasico").checked = true;
+        } else if (reserva.plan_evento === "Premium") {
+            document.getElementById("editPlanPremium").checked = true;
+        } else if (reserva.plan_evento === "Golden") {
+            document.getElementById("editPlanGolden").checked = true;
+        }
+
+
+        const myModal = new bootstrap.Modal(document.getElementById("editModal"));
+        myModal.show();
+
+
+        document.getElementById("editForm").onsubmit = async function(event) {
+            event.preventDefault();
+
+            // Obtener los datos del formulario
+            const updatedReserva = {
+                apellidos: document.getElementById("editLastName").value,
+                nombres: document.getElementById("editFirstName").value,
+                email: document.getElementById("editEmail").value,
+                telefono: document.getElementById("editPhone").value,
+                tipo_evento: document.getElementById("editEventType").value,
+                plan_evento: document.querySelector('input[name="eventPlan"]:checked')?.value,
+                cantidad_anticipo: document.getElementById("editAdvancePayment").value,
+                servicio_adicional: document.getElementById("editAdditionalService").value,
+                horas_renta: document.getElementById("editRentalHours").value,
+                compromiso_pago: document.getElementById("editCommitment").checked
+            };
+
+             const responseUpdate = await fetch(`http://localhost:3000/actualizar-reserva/${id}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(updatedReserva)
+            });
+
+            const data = await responseUpdate.json();
+            alert(data.mensaje);
+
+            if (data.mensaje === "Reserva actualizada con éxito") {
+                cargarReservas();
+            }
+
+            // Cerrar el modal
+            myModal.hide();
+        };
+    }
+
+    async function cargarReservas() {
+        const response = await fetch("http://localhost:3000/reservas");
+        const reservas = await response.json();
+        const tableBody = document.getElementById("reservasTableBody");
+        tableBody.innerHTML = '';
+
+        reservas.forEach((reserva, index) => {
+            const row = document.createElement("tr");
+
+            row.innerHTML = `
+            <td>${index + 1}</td>
+            <td>${reserva.apellidos}</td>
+            <td>${reserva.nombres}</td>
+            <td>${reserva.email}</td>
+            <td>${reserva.telefono}</td>
+            <td>${reserva.tipo_evento}</td>
+            <td>${reserva.plan_evento}</td>
+            <td>$${reserva.cantidad_anticipo}</td>
+            <td>${reserva.servicio_adicional}</td>
+            <td>${reserva.horas_renta}</td>
+            <td>${reserva.compromiso_pago ? "Sí" : "No"}</td>
+            <td>
+                <button class="btn btn-warning" onclick="editarReserva(${reserva.id})">✏️</button>
+                <button class="btn btn-danger" onclick="eliminarReserva(${reserva.id})">🗑️</button>
+            </td>
+        `;
+            tableBody.appendChild(row);
+        });
+    }
+
+    window.onload = cargarReservas;
+
+</script>
+
+<!-- Modal para editar una reserva -->
+<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editModalLabel">Editar Reserva</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editForm">
+                    <div class="mb-3">
+                        <label for="editLastName" class="form-label">Apellidos</label>
+                        <input type="text" class="form-control" id="editLastName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editFirstName" class="form-label">Nombre(s)</label>
+                        <input type="text" class="form-control" id="editFirstName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editEmail" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="editEmail" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editPhone" class="form-label">Número de Teléfono</label>
+                        <input type="tel" class="form-control" id="editPhone" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editEventType" class="form-label">Tipo de Evento</label>
+                        <input type="text" class="form-control" id="editEventType" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Tipo de Plan</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="eventPlan" id="editPlanClasico" value="Clasico">
+                            <label class="form-check-label" for="editPlanClasico">Clásico</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="eventPlan" id="editPlanPremium" value="Premium">
+                            <label class="form-check-label" for="editPlanPremium">Premium</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="eventPlan" id="editPlanGolden" value="Golden">
+                            <label class="form-check-label" for="editPlanGolden">Golden</label>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editAdvancePayment" class="form-label">Cantidad de Anticipo</label>
+                        <input type="number" class="form-control" id="editAdvancePayment" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editAdditionalService" class="form-label">Servicio Adicional</label>
+                        <input type="text" class="form-control" id="editAdditionalService">
+                    </div>
+                    <div class="mb-3">
+                        <label for="editRentalHours" class="form-label">Horas de Renta</label>
+                        <select class="form-select" id="editRentalHours" required>
+                            <option value="3">3 horas</option>
+                            <option value="4">4 horas</option>
+                            <option value="5">5 horas</option>
+                            <option value="6">6 horas</option>
+                            <option value="7">7 horas</option>
+                        </select>
+                    </div>
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="editCommitment">
+                        <label class="form-check-label" for="editCommitment">Compromiso de pago</label>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>
+
