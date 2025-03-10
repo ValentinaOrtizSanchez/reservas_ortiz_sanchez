@@ -13,7 +13,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 const limiter = rateLimit({
     windowMs: 15 * 60 * 1000,
-    max: 5,
+    max: 25,
     message: "¡Ja! No puedes tirar mi server.",
 });
 
