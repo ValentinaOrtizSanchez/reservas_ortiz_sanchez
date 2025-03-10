@@ -7,11 +7,16 @@ console.log(process.env.DB_PASSWORD);
 console.log(process.env.DB_DATABASE);
 
 
+
 const connection = mysql.createConnection({
-    host: 'localhost',
+    host: 'caboose.proxy.rlwy.net',
     user: 'root',
-    password: '5584620.',
-    database: 'eventos_db'
+    password: 'NNpcFFZuGgiUuxojiVVYCcHyZjXpTaSB',
+    database: 'railway',
+    port: 29990,
+    ssl: {
+        rejectUnauthorized: false,
+    }
 });
 
 
